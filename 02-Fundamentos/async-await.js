@@ -1,26 +1,63 @@
-/* let getNombre = async () => {
-    return 'Martin';
-}
+const empleados = [
+  {
+    id: 1,
+    nombre: "Martin",
+  },
+  {
+    id: 3,
+    nombre: "Marcelo",
+  },
+  {
+    id: 4,
+    nombre: "Lucas",
+  },
+];
 
-console.log(getNombre()) */
+const salarios = [
+  {
+    id: 1,
+    salario: 1000,
+  },
+  {
+    id: 3,
+    salario: 1500,
+  },
+];
 
+const getEmpleado = (id) => {
+  return new Promise((resolve, reject) => {
+    const empleado = empleados.find((empleado) => empleado.id === id)?.nombre;
+    if (empleado) {
+      resolve(empleado);
+    } else {
+      reject(`No existe empleado con id ${id}`);
+    }
+  });
+};
 
-let getNombre = () => {
-    return new Promise( (resolve,reject)=>{
-        setTimeout(() => {
-            resolve('Martin')
-        }, 3000);
-    })
-}
+const getSalario = () => {
+  return new Promise((resolve, reject) => {
+    const salario = salarios.find((s) => s.id === id)?.salario;
+    if (salario) {
+      resolve(salario);
+    } else {
+      reject(`No existe salario para el id ${id}`);
+    }
+  });
+};
 
-let saludo = async () => {
+const getInfoUsuario = async (id) => {
+  try {
+    const empleado = await getEmpleado(id);
+    const salario = await getSalario(id);
+    return `El salario de ${empleado} es de ${salario}`;
+  } catch (error) {
+    throw error;
+  }
+};
 
-    let nombre = await getNombre();
+const id = 4;
 
-
-    return `Hola ${nombre}`;
-}
-
-saludo().then(msj => {
-    console.log(msj);
-})
+getInfoUsuario(id)
+  .then((msg) => console.log(msg))
+  .catch((err) => console.error(err));
