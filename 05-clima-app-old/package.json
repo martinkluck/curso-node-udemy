@@ -2,18 +2,15 @@
   "name": "05-clima-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "colors": "^1.4.0",
-    "dotenv": "^10.0.0",
-    "inquirer": "^8.1.1"
+    "yargs": "^13.3.2"
   }
 }
