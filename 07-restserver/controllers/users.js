@@ -1,39 +1,52 @@
 const { request, response } = require("express");
+const bcrypt = require("bcryptjs");
 
-const getUsers = (req = request, res = response) => {
-  const { q, nombre = "No name", apikey, page = 1, limit = 15 } = req.query;
+const User = require("../models/user");
+
+const getUsers = async (req = request, res = response) => {
+  const { limit = 5, from = 0 } = req.query;
+  const query = { status: true };
+  // const users = await User.find(query).skip(Number(from)).limit(Number(limit));
+  // const total = await User.countDocuments(query);
+  const [total, users] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query).skip(Number(from)).limit(Number(limit)),
+  ]);
   res.json({
-    message: "Get API",
-    q,
-    nombre,
-    apikey,
-    page,
-    limit,
+    users,
+    total,
   });
 };
 
-const createUser = (req = request, res = response) => {
-  const { name, age } = req.body;
-  res.status(201).json({
-    message: "post API",
-    name,
-    age,
-  });
+const createUser = async (req = request, res = response) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password, role });
+  // Encriptar la contraseña
+  const salt = bcrypt.genSaltSync();
+  user.password = bcrypt.hashSync(user.password, salt);
+  // Guardar en DB
+  await user.save();
+  res.status(201).json(user);
 };
 
-const updateUser = (req = request, res = response) => {
+const updateUser = async (req = request, res = response) => {
   const id = req.params.id;
-  res.json({
-    message: "put API",
-    id,
-  });
+  const { _id, password, google, email, ...resto } = req.body;
+  if (password) {
+    const salt = bcrypt.genSaltSync();
+    resto.password = bcrypt.hashSync(password, salt);
+  }
+  const user = await User.findByIdAndUpdate(id, resto);
+  res.json(user);
 };
 
-const deleteUser = (req = request, res = response) => {
+const deleteUser = async (req = request, res = response) => {
   const { id } = req.params;
-  res.json({
-    message: "delete API",
-  });
+
+  // Borrado  de forma fisica
+  // const user = await User.findByIdAndDelete(id);
+  const user = await User.findByIdAndUpdate(id, { status: false });
+  res.json(user);
 };
 
 module.exports = {
