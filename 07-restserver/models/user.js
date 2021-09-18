@@ -10,7 +10,7 @@
 
 const { Schema, model } = require("mongoose");
 
-const UserSchema = Schema({
+const UserSchema = new Schema({
   name: {
     type: String,
     required: [true, "El nombre es obligatorio"],
@@ -43,7 +43,8 @@ const UserSchema = Schema({
 });
 
 UserSchema.methods.toJSON = function () {
-  const { __v, password, ...user } = this.toObject();
+  const { __v, password, _id, ...user } = this.toObject();
+  user.uid = _id;
   return user;
 };
 
