@@ -37,10 +37,21 @@ const productExist = async (id) => {
   }
 };
 
+const validCollections = (collection = "", collections = []) => {
+  const include = collections.includes(collection);
+  if (!include) {
+    throw new Error(
+      `La colección ${collection} no esta dentro de lo permitido (${collections})`
+    );
+  }
+  return true;
+};
+
 module.exports = {
   roleIsValid,
   existEmail,
   existUserByID,
   categoryExist,
   productExist,
+  validCollections,
 };
