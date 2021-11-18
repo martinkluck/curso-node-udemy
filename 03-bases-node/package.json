@@ -11,6 +11,6 @@
   "license": "MIT",
   "dependencies": {
     "colors": "^1.4.0",
-    "yargs": "^17.2.0"
+    "yargs": "^17.2.1"
   }
 }
